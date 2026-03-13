@@ -1,29 +1,34 @@
 
-body{
-font-family:Arial;
-background:#111;
-color:white;
-padding:20px;
+:root{
+  --bg:#111317;--card:#1a1e24;--text:#f5f7fb;--muted:#a6afc3;--border:#2c3440;
+  --accent:#7c4dff;--accent2:#c2a6ff;--success:#34d399;
 }
-
-input,select{
-display:block;
-margin:8px 0;
-padding:8px;
-width:260px;
-}
-
-button{
-padding:10px;
-background:#6c4cff;
-color:white;
-border:none;
-cursor:pointer;
-}
-
-.card{
-border:1px solid #333;
-padding:10px;
-margin:10px 0;
-background:#1b1b1b;
-}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
+button,input,textarea,select{font:inherit}
+.topbar,.section-head,.section-actions,.segmented{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.topbar{justify-content:space-between;padding:22px 22px 10px}
+.wrap{max-width:1200px;margin:0 auto;padding:0 22px 22px;display:flex;flex-direction:column;gap:16px}
+.eyebrow{text-transform:uppercase;letter-spacing:.16em;color:var(--muted);font-size:.75rem;font-weight:700}
+h1{margin:.35rem 0;font-size:clamp(2rem,4vw,3rem)}
+h2{margin:0 0 8px}
+.subtitle,.muted{color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px}
+.toolbar{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
+input,textarea,select{width:100%;background:#0f1217;color:var(--text);border:1px solid var(--border);border-radius:12px;padding:11px 12px}
+textarea{min-height:90px;resize:vertical}
+button{background:var(--accent);color:white;border:none;border-radius:12px;padding:10px 14px;cursor:pointer}
+.seg{background:#0f1217;border:1px solid var(--border);color:var(--text)}
+.seg.active{background:var(--accent);border-color:var(--accent)}
+.hidden{display:none !important}
+.grid{display:grid;gap:10px}
+.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.form{margin-top:14px;border-top:1px solid var(--border);padding-top:14px}
+.stack{display:flex;flex-direction:column;gap:10px}
+.item{background:#0f1217;border:1px solid var(--border);border-radius:14px;padding:12px}
+.inline{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.badge{font-size:.75rem;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:#0f1217}
+.badge.platform{background:rgba(124,77,255,.15);border-color:var(--accent2)}
+.badge.success{background:rgba(52,211,153,.14);border-color:var(--success)}
+.small{font-size:.8rem}
+@media (max-width:900px){ .grid.two{grid-template-columns:1fr} }

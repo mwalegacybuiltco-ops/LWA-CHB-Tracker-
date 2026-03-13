@@ -1,14 +1,45 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LegacyBuilt Command OS</title>
-    <meta name="theme-color" content="#6d28d9" />
-    <link rel="manifest" href="./manifest.webmanifest" />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="./src/main.jsx"></script>
-  </body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LegacyBuilt Command OS</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="manifest" href="manifest.json">
+</head>
+<body>
+
+<header>
+<h1>LegacyBuilt Command OS</h1>
+<p>Lead + Canine Haven Business Tracker</p>
+</header>
+
+<section class="container">
+
+<h2>Add Lead</h2>
+<input id="leadName" placeholder="Name">
+<input id="leadPlatform" placeholder="Platform">
+<input id="followupDate" type="date">
+<textarea id="leadNotes" placeholder="Notes"></textarea>
+<button onclick="addLead()">Add Lead</button>
+
+<h2>Leads</h2>
+<ul id="leadList"></ul>
+
+<hr>
+
+<h2>Add Canine Haven Contact</h2>
+<input id="chbName" placeholder="Name">
+<input id="chbPlatform" placeholder="Platform">
+<textarea id="chbNotes" placeholder="Notes"></textarea>
+<button onclick="addCHB()">Add Contact</button>
+
+<h2>Canine Haven Contacts</h2>
+<ul id="chbList"></ul>
+
+</section>
+
+<script src="js/app.js"></script>
+</body>
 </html>

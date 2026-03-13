@@ -12,7 +12,11 @@
     <div>
       <div class="eyebrow">LegacyBuilt Command OS</div>
       <h1>Lead OS + Canine Haven Business Tracker</h1>
-      <p class="subtitle">Full dashboard with platform-based content tracking and performance metrics.</p>
+      <p class="subtitle">LWA and Canine Haven in one static GitHub Pages app.</p>
+    </div>
+    <div class="top-actions">
+      <button class="secondary" id="exportBtn">Export CSV</button>
+      <button id="installBtn" class="hidden">Install App</button>
     </div>
   </header>
 
@@ -21,20 +25,56 @@
       <div class="segmented">
         <button class="seg active" data-section="lwa">LWA Lead OS</button>
         <button class="seg" data-section="chb">Canine Haven</button>
+        <button class="seg" data-section="calendar">Calendar</button>
+        <button class="seg" data-section="todo">To Do List</button>
       </div>
-      <input id="searchInput" placeholder="Search title, platform, pillar, notes..." />
+      <input id="searchInput" placeholder="Search name, platform, notes, stage..." />
     </section>
 
     <section id="lwaSection" class="section">
+      <div class="stats" id="lwaStats"></div>
+
       <div class="card">
         <div class="section-head">
           <div>
-            <h2>LWA content tracker</h2>
-            <p class="muted">Choose the platform, then track if it did well, comments, and leads from it.</p>
+            <h2>LWA lead pipeline</h2>
+            <p class="muted">Track follow-ups, VIP joins, affiliate and ambassador movement, and ghosted leads.</p>
           </div>
           <div class="section-actions">
-            <button id="toggleLwaContentForm">Add LWA Content</button>
+            <select id="lwaFilter">
+              <option>All</option>
+              <option>Due Today</option>
+              <option>Overdue</option>
+              <option>24 Hours</option>
+              <option>48 Hours</option>
+              <option>72 Hours</option>
+              <option>30 Day</option>
+              <option>Ghosted</option>
+              <option>Affiliate</option>
+              <option>Ambassador</option>
+              <option>VIP Joined</option>
+            </select>
+            <button id="toggleLwaLeadForm">Add Lead</button>
+            <button class="secondary" id="toggleLwaContentForm">Add Content</button>
           </div>
+        </div>
+
+        <div id="lwaLeadForm" class="form hidden">
+          <div class="grid two">
+            <input id="lwaLeadName" placeholder="Lead name" />
+            <input id="lwaLeadPlatform" placeholder="Platform (Facebook, TikTok, Instagram...)" />
+            <select id="lwaLeadStage"></select>
+            <input id="lwaLeadFollowDate" type="date" />
+            <input id="lwaLeadScore" type="number" min="1" max="10" value="5" />
+          </div>
+          <textarea id="lwaLeadNotes" placeholder="Notes, objection, next move..."></textarea>
+          <div class="checks">
+            <label><input type="checkbox" id="lwaLeadVIP" /> Joined FB VIP</label>
+            <label><input type="checkbox" id="lwaLeadAffiliate" /> Became Affiliate</label>
+            <label><input type="checkbox" id="lwaLeadAmbassador" /> Became Ambassador</label>
+            <label><input type="checkbox" id="lwaLeadGhosted" /> Ghosted</label>
+          </div>
+          <button id="saveLwaLead">Save LWA Lead</button>
         </div>
 
         <div id="lwaContentForm" class="form hidden">
@@ -43,37 +83,87 @@
             <select id="lwaContentPlatform"></select>
             <select id="lwaContentPillar"></select>
             <select id="lwaContentStatus">
-              <option value="Planned">Planned</option>
-              <option value="Drafted">Drafted</option>
-              <option value="Posted">Posted</option>
+              <option>Planned</option>
+              <option>Drafted</option>
+              <option>Posted</option>
             </select>
             <input id="lwaContentDate" type="date" />
-            <input id="lwaContentTouches" type="number" min="0" value="0" />
-            <input id="lwaContentComments" type="number" min="0" value="0" />
-            <input id="lwaContentLeads" type="number" min="0" value="0" />
+            <input id="lwaContentTouches" type="number" min="0" value="0" placeholder="Touches" />
+            <input id="lwaContentComments" type="number" min="0" value="0" placeholder="Comments" />
+            <input id="lwaContentLeads" type="number" min="0" value="0" placeholder="Leads" />
           </div>
           <label class="inline-check"><input id="lwaContentDidWell" type="checkbox" /> Did it do well?</label>
-          <textarea id="lwaContentNotes" placeholder="Hook, CTA, angle, what happened, what worked..."></textarea>
+          <textarea id="lwaContentNotes" placeholder="Hook, CTA, angle, what happened, results..."></textarea>
           <button id="saveLwaContent">Save LWA Content</button>
         </div>
       </div>
 
       <div class="card">
-        <h2>LWA content list</h2>
-        <div id="lwaContentList" class="stack"></div>
+        <h2>LWA follow-up flow</h2>
+        <div id="lwaFlow" class="flow-board"></div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <h2>LWA quick calendar</h2>
+          <div id="lwaCalendar"></div>
+        </div>
+        <div class="card">
+          <h2>LWA content tracker</h2>
+          <div id="lwaContentList" class="stack"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>LWA lead cards</h2>
+        <div id="lwaLeadList" class="card-grid"></div>
       </div>
     </section>
 
     <section id="chbSection" class="section hidden">
+      <div class="stats" id="chbStats"></div>
+
       <div class="card">
         <div class="section-head">
           <div>
-            <h2>Canine Haven content tracker</h2>
-            <p class="muted">Choose the platform and track comments, leads, and performance.</p>
+            <h2>Canine Haven pipeline</h2>
+            <p class="muted">Track follow-up flow, affiliate and ambassador movement, VIP joins, and ghosted contacts.</p>
           </div>
           <div class="section-actions">
-            <button id="toggleChbContentForm">Add CHB Content</button>
+            <select id="chbFilter">
+              <option>All</option>
+              <option>Due Today</option>
+              <option>Overdue</option>
+              <option>24 Hours</option>
+              <option>48 Hours</option>
+              <option>72 Hours</option>
+              <option>30 Day</option>
+              <option>Ghosted</option>
+              <option>Affiliate</option>
+              <option>Ambassador</option>
+              <option>VIP Joined</option>
+            </select>
+            <button id="toggleChbLeadForm">Add Contact</button>
+            <button class="secondary" id="toggleChbContentForm">Add Content</button>
           </div>
+        </div>
+
+        <div id="chbLeadForm" class="form hidden">
+          <div class="grid two">
+            <input id="chbLeadName" placeholder="Name" />
+            <input id="chbLeadPlatform" placeholder="Platform" />
+            <select id="chbLeadStage"></select>
+            <input id="chbLeadFollowDate" type="date" />
+            <input id="chbLeadScore" type="number" min="1" max="10" value="5" />
+          </div>
+          <textarea id="chbLeadNotes" placeholder="Notes, product interest, next move..."></textarea>
+          <div class="checks">
+            <label><input type="checkbox" id="chbLeadVIP" /> Joined FB VIP</label>
+            <label><input type="checkbox" id="chbLeadAffiliate" /> Became Affiliate</label>
+            <label><input type="checkbox" id="chbLeadAmbassador" /> Became Ambassador</label>
+            <label><input type="checkbox" id="chbLeadGhosted" /> Ghosted</label>
+          </div>
+          <button id="saveChbLead">Save CHB Contact</button>
         </div>
 
         <div id="chbContentForm" class="form hidden">
@@ -82,24 +172,103 @@
             <select id="chbContentPlatform"></select>
             <select id="chbContentPillar"></select>
             <select id="chbContentStatus">
-              <option value="Planned">Planned</option>
-              <option value="Drafted">Drafted</option>
-              <option value="Posted">Posted</option>
+              <option>Planned</option>
+              <option>Drafted</option>
+              <option>Posted</option>
             </select>
             <input id="chbContentDate" type="date" />
-            <input id="chbContentTouches" type="number" min="0" value="0" />
-            <input id="chbContentComments" type="number" min="0" value="0" />
-            <input id="chbContentLeads" type="number" min="0" value="0" />
+            <input id="chbContentTouches" type="number" min="0" value="0" placeholder="Touches" />
+            <input id="chbContentComments" type="number" min="0" value="0" placeholder="Comments" />
+            <input id="chbContentLeads" type="number" min="0" value="0" placeholder="Leads" />
           </div>
           <label class="inline-check"><input id="chbContentDidWell" type="checkbox" /> Did it do well?</label>
-          <textarea id="chbContentNotes" placeholder="Product angle, dog tip, CTA, results, what worked..."></textarea>
+          <textarea id="chbContentNotes" placeholder="Product angle, dog tip, CTA, results..."></textarea>
           <button id="saveChbContent">Save CHB Content</button>
         </div>
       </div>
 
       <div class="card">
-        <h2>Canine Haven content list</h2>
-        <div id="chbContentList" class="stack"></div>
+        <h2>Canine Haven follow-up flow</h2>
+        <div id="chbFlow" class="flow-board"></div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <h2>Canine Haven quick calendar</h2>
+          <div id="chbCalendar"></div>
+        </div>
+        <div class="card">
+          <h2>Canine Haven content tracker</h2>
+          <div id="chbContentList" class="stack"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Canine Haven contact cards</h2>
+        <div id="chbLeadList" class="card-grid"></div>
+      </div>
+    </section>
+
+    <section id="calendarSection" class="section hidden">
+      <div class="card">
+        <div class="section-head">
+          <div>
+            <h2>Actual calendar</h2>
+            <p class="muted">Monthly view for both businesses together.</p>
+          </div>
+          <div class="section-actions">
+            <button class="secondary" id="prevMonthBtn">Previous</button>
+            <div id="monthLabel" class="month-label"></div>
+            <button class="secondary" id="nextMonthBtn">Next</button>
+          </div>
+        </div>
+        <div class="calendar-grid-wrap">
+          <div class="calendar-weekdays">
+            <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+          </div>
+          <div id="monthGrid" class="month-grid"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Selected day follow-ups</h2>
+        <div id="selectedDayItems" class="stack"></div>
+      </div>
+    </section>
+
+    <section id="todoSection" class="section hidden">
+      <div class="stats" id="todoStats"></div>
+      <div class="card">
+        <div class="section-head">
+          <div>
+            <h2>To do list</h2>
+            <p class="muted">Daily task list for follow-ups, content, and admin.</p>
+          </div>
+        </div>
+
+        <div class="form">
+          <div class="grid two">
+            <input id="todoTitle" placeholder="Task title" />
+            <select id="todoBusiness">
+              <option value="LWA">LWA</option>
+              <option value="Canine Haven">Canine Haven</option>
+              <option value="Personal/Admin">Personal/Admin</option>
+            </select>
+            <input id="todoDate" type="date" />
+            <select id="todoPriority">
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+            </select>
+          </div>
+          <textarea id="todoNotes" placeholder="Task notes"></textarea>
+          <button id="saveTodo">Save Task</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Task list</h2>
+        <div id="todoList" class="stack"></div>
       </div>
     </section>
   </main>

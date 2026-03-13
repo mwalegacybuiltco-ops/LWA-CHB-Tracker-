@@ -3,7 +3,7 @@
   "short_name": "LegacyBuiltOS",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#111111",
-  "theme_color": "#6c3cff",
+  "background_color": "#111317",
+  "theme_color": "#7c4dff",
   "icons": []
 }

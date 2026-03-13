@@ -1,45 +1,199 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LegacyBuilt Command OS</title>
-<link rel="stylesheet" href="css/style.css">
-<link rel="manifest" href="manifest.json">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LegacyBuilt Command OS</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
+  <header class="topbar">
+    <div>
+      <div class="eyebrow">LegacyBuilt Command OS</div>
+      <h1>Lead OS + Canine Haven Business Tracker</h1>
+      <p class="subtitle">LWA and Canine Haven in one static GitHub Pages app.</p>
+    </div>
+    <div class="top-actions">
+      <button class="secondary" id="exportBtn">Export CSV</button>
+      <button id="installBtn" class="hidden">Install App</button>
+    </div>
+  </header>
 
-<header>
-<h1>LegacyBuilt Command OS</h1>
-<p>Lead + Canine Haven Business Tracker</p>
-</header>
+  <main class="wrap">
+    <section class="toolbar card">
+      <div class="segmented">
+        <button class="seg active" data-section="lwa">LWA Lead OS</button>
+        <button class="seg" data-section="chb">Canine Haven</button>
+      </div>
+      <input id="searchInput" placeholder="Search name, platform, notes, stage..." />
+    </section>
 
-<section class="container">
+    <section id="lwaSection" class="section">
+      <div class="stats" id="lwaStats"></div>
 
-<h2>Add Lead</h2>
-<input id="leadName" placeholder="Name">
-<input id="leadPlatform" placeholder="Platform">
-<input id="followupDate" type="date">
-<textarea id="leadNotes" placeholder="Notes"></textarea>
-<button onclick="addLead()">Add Lead</button>
+      <div class="card">
+        <div class="section-head">
+          <div>
+            <h2>LWA lead pipeline</h2>
+            <p class="muted">Track follow-ups, platform, VIP joins, affiliates, ambassadors, and content touches.</p>
+          </div>
+          <div class="section-actions">
+            <select id="lwaFilter">
+              <option>All</option>
+              <option>Due Today</option>
+              <option>Overdue</option>
+              <option>24 Hours</option>
+              <option>48 Hours</option>
+              <option>72 Hours</option>
+              <option>30 Day</option>
+              <option>Affiliate</option>
+              <option>Ambassador</option>
+              <option>VIP Joined</option>
+              <option>Ghosted</option>
+            </select>
+            <button id="toggleLwaLeadForm">Add Lead</button>
+            <button class="secondary" id="toggleLwaContentForm">Add Content</button>
+          </div>
+        </div>
 
-<h2>Leads</h2>
-<ul id="leadList"></ul>
+        <div id="lwaLeadForm" class="form hidden">
+          <div class="grid two">
+            <input id="lwaLeadName" placeholder="Lead name" />
+            <input id="lwaLeadPlatform" placeholder="Platform (Facebook, TikTok, Instagram...)" />
+            <select id="lwaLeadStage"></select>
+            <select id="lwaLeadFollowType"></select>
+            <input id="lwaLeadFollowDate" type="date" />
+            <input id="lwaLeadScore" type="number" min="1" max="10" value="5" />
+          </div>
+          <textarea id="lwaLeadNotes" placeholder="Notes, objection, next move..."></textarea>
+          <div class="checks">
+            <label><input type="checkbox" id="lwaLeadVIP" /> Joined FB VIP</label>
+            <label><input type="checkbox" id="lwaLeadAffiliate" /> Became Affiliate</label>
+            <label><input type="checkbox" id="lwaLeadAmbassador" /> Became Ambassador</label>
+            <label><input type="checkbox" id="lwaLeadGhosted" /> Ghosted</label>
+          </div>
+          <button id="saveLwaLead">Save LWA Lead</button>
+        </div>
 
-<hr>
+        <div id="lwaContentForm" class="form hidden">
+          <div class="grid two">
+            <input id="lwaContentTitle" placeholder="Content title" />
+            <select id="lwaContentPlatform"></select>
+            <select id="lwaContentPillar"></select>
+            <select id="lwaContentStatus">
+              <option>Planned</option>
+              <option>Drafted</option>
+              <option>Posted</option>
+            </select>
+            <input id="lwaContentDate" type="date" />
+            <input id="lwaContentTouches" type="number" min="0" value="0" placeholder="Touches" />
+          </div>
+          <textarea id="lwaContentNotes" placeholder="Hook, CTA, angle, caption reminder..."></textarea>
+          <button id="saveLwaContent">Save LWA Content</button>
+        </div>
+      </div>
 
-<h2>Add Canine Haven Contact</h2>
-<input id="chbName" placeholder="Name">
-<input id="chbPlatform" placeholder="Platform">
-<textarea id="chbNotes" placeholder="Notes"></textarea>
-<button onclick="addCHB()">Add Contact</button>
+      <div class="two-col">
+        <div class="card">
+          <h2>LWA follow-up calendar</h2>
+          <div id="lwaCalendar"></div>
+        </div>
+        <div class="card">
+          <h2>LWA content tracker</h2>
+          <div id="lwaContentList" class="stack"></div>
+        </div>
+      </div>
 
-<h2>Canine Haven Contacts</h2>
-<ul id="chbList"></ul>
+      <div class="card">
+        <h2>LWA lead cards</h2>
+        <div id="lwaLeadList" class="card-grid"></div>
+      </div>
+    </section>
 
-</section>
+    <section id="chbSection" class="section hidden">
+      <div class="stats" id="chbStats"></div>
 
-<script src="js/app.js"></script>
+      <div class="card">
+        <div class="section-head">
+          <div>
+            <h2>Canine Haven pipeline</h2>
+            <p class="muted">Track dog business contacts, affiliate/ambassador movement, VIP joins, and content.</p>
+          </div>
+          <div class="section-actions">
+            <select id="chbFilter">
+              <option>All</option>
+              <option>Due Today</option>
+              <option>Overdue</option>
+              <option>24 Hours</option>
+              <option>48 Hours</option>
+              <option>72 Hours</option>
+              <option>30 Day</option>
+              <option>Affiliate</option>
+              <option>Ambassador</option>
+              <option>VIP Joined</option>
+              <option>Ghosted</option>
+            </select>
+            <button id="toggleChbLeadForm">Add Contact</button>
+            <button class="secondary" id="toggleChbContentForm">Add Content</button>
+          </div>
+        </div>
+
+        <div id="chbLeadForm" class="form hidden">
+          <div class="grid two">
+            <input id="chbLeadName" placeholder="Name" />
+            <input id="chbLeadPlatform" placeholder="Platform" />
+            <select id="chbLeadStage"></select>
+            <select id="chbLeadFollowType"></select>
+            <input id="chbLeadFollowDate" type="date" />
+            <input id="chbLeadScore" type="number" min="1" max="10" value="5" />
+          </div>
+          <textarea id="chbLeadNotes" placeholder="Notes, product interest, next move..."></textarea>
+          <div class="checks">
+            <label><input type="checkbox" id="chbLeadVIP" /> Joined FB VIP</label>
+            <label><input type="checkbox" id="chbLeadAffiliate" /> Became Affiliate</label>
+            <label><input type="checkbox" id="chbLeadAmbassador" /> Became Ambassador</label>
+            <label><input type="checkbox" id="chbLeadGhosted" /> Ghosted</label>
+          </div>
+          <button id="saveChbLead">Save CHB Contact</button>
+        </div>
+
+        <div id="chbContentForm" class="form hidden">
+          <div class="grid two">
+            <input id="chbContentTitle" placeholder="Content title" />
+            <select id="chbContentPlatform"></select>
+            <select id="chbContentPillar"></select>
+            <select id="chbContentStatus">
+              <option>Planned</option>
+              <option>Drafted</option>
+              <option>Posted</option>
+            </select>
+            <input id="chbContentDate" type="date" />
+            <input id="chbContentTouches" type="number" min="0" value="0" placeholder="Touches" />
+          </div>
+          <textarea id="chbContentNotes" placeholder="Product angle, dog tip, CTA..."></textarea>
+          <button id="saveChbContent">Save CHB Content</button>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <h2>Canine Haven calendar</h2>
+          <div id="chbCalendar"></div>
+        </div>
+        <div class="card">
+          <h2>Canine Haven content tracker</h2>
+          <div id="chbContentList" class="stack"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Canine Haven contact cards</h2>
+        <div id="chbLeadList" class="card-grid"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/app.js"></script>
 </body>
 </html>

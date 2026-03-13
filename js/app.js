@@ -1,13 +1,14 @@
 
 const STORAGE = {
-  lwaLeads: "lb_static_lwa_leads_v2",
-  lwaContent: "lb_static_lwa_content_v2",
-  chbLeads: "lb_static_chb_leads_v2",
-  chbContent: "lb_static_chb_content_v2",
-  todos: "lb_static_todos_v2",
+  lwaLeads: "lb_static_lwa_leads_v3",
+  lwaContent: "lb_static_lwa_content_v3",
+  chbLeads: "lb_static_chb_leads_v3",
+  chbContent: "lb_static_chb_content_v3",
+  todos: "lb_static_todos_v3",
 };
 
 const STAGES = ["New Lead","Conversation Started","24 Hours","48 Hours","72 Hours","30 Day","VIP Joined","Affiliate","Ambassador","Ghosted","Closed"];
+const FLOW_STAGES = ["24 Hours","48 Hours","72 Hours","30 Day","Ghosted"];
 const CONTENT_PLATFORMS = ["Facebook","TikTok","Instagram","Email","Group","Stories","Other"];
 const LWA_PILLARS = ["Authority","Story","Offer","Objection","Engagement"];
 const CHB_PILLARS = ["Product Post","Dog Tips","Affiliate Post","Customer Story","Engagement Post"];
@@ -54,6 +55,7 @@ let state = {
   calendarYear: new Date().getFullYear(),
   lwaLeads: load(STORAGE.lwaLeads, [
     {id:id(),name:"Sarah M.",platform:"Facebook",stage:"24 Hours",followDate:today(),score:7,joinedVIP:true,becameAffiliate:false,becameAmbassador:false,ghosted:false,notes:"Watched the overview.",history:[{id:id(),text:"Sent first follow-up.",createdAt:new Date().toISOString()}]},
+    {id:id(),name:"Jen K.",platform:"TikTok",stage:"Ghosted",followDate:today(),score:3,joinedVIP:false,becameAffiliate:false,becameAmbassador:false,ghosted:true,notes:"Opened then disappeared.",history:[]},
   ]),
   lwaContent: load(STORAGE.lwaContent, [
     {id:id(),title:"What digital marketing actually is",platform:"TikTok",pillar:"Authority",status:"Drafted",date:today(),touches:1,notes:"Simple explanation."},
@@ -136,6 +138,7 @@ document.getElementById("saveLwaLead").onclick = () => {
     history:[]
   };
   if(!item.name) return;
+  if(item.ghosted) item.stage = "Ghosted";
   state.lwaLeads.unshift(item);
   persist(); render();
 };
@@ -156,6 +159,7 @@ document.getElementById("saveChbLead").onclick = () => {
     history:[]
   };
   if(!item.name) return;
+  if(item.ghosted) item.stage = "Ghosted";
   state.chbLeads.unshift(item);
   persist(); render();
 };
@@ -247,7 +251,7 @@ function filteredLeads(arr, filter){
     else if(filter === "Affiliate") matchesFilter = item.becameAffiliate;
     else if(filter === "Ambassador") matchesFilter = item.becameAmbassador;
     else if(filter === "VIP Joined") matchesFilter = item.joinedVIP;
-    else if(filter === "Ghosted") matchesFilter = item.ghosted;
+    else if(filter === "Ghosted") matchesFilter = item.ghosted || item.stage === "Ghosted";
     else if(filter !== "All") matchesFilter = item.stage === filter;
     return matchesSearch && matchesFilter;
   });
@@ -269,26 +273,26 @@ function renderStats(){
   const lwaContent = state.lwaContent;
   document.getElementById("lwaStats").innerHTML = [
     statBox("Total Leads", lwa.length),
-    statBox("Due Today", lwa.filter(x => x.followDate === today()).length),
-    statBox("Overdue", lwa.filter(x => x.followDate < today()).length),
-    statBox("Affiliates", lwa.filter(x => x.becameAffiliate).length),
-    statBox("Ambassadors", lwa.filter(x => x.becameAmbassador).length),
+    statBox("24 Hr", lwa.filter(x => x.stage === "24 Hours").length),
+    statBox("48 Hr", lwa.filter(x => x.stage === "48 Hours").length),
+    statBox("72 Hr", lwa.filter(x => x.stage === "72 Hours").length),
+    statBox("30 Day", lwa.filter(x => x.stage === "30 Day").length),
+    statBox("Ghosted", lwa.filter(x => x.ghosted || x.stage === "Ghosted").length),
     statBox("VIP Joined", lwa.filter(x => x.joinedVIP).length),
     statBox("Content Items", lwaContent.length),
-    statBox("Posted", lwaContent.filter(x => x.status === "Posted").length),
   ].join("");
 
   const chb = state.chbLeads;
   const chbContent = state.chbContent;
   document.getElementById("chbStats").innerHTML = [
     statBox("Total Contacts", chb.length),
-    statBox("Due Today", chb.filter(x => x.followDate === today()).length),
-    statBox("Overdue", chb.filter(x => x.followDate < today()).length),
-    statBox("Affiliates", chb.filter(x => x.becameAffiliate).length),
-    statBox("Ambassadors", chb.filter(x => x.becameAmbassador).length),
+    statBox("24 Hr", chb.filter(x => x.stage === "24 Hours").length),
+    statBox("48 Hr", chb.filter(x => x.stage === "48 Hours").length),
+    statBox("72 Hr", chb.filter(x => x.stage === "72 Hours").length),
+    statBox("30 Day", chb.filter(x => x.stage === "30 Day").length),
+    statBox("Ghosted", chb.filter(x => x.ghosted || x.stage === "Ghosted").length),
     statBox("VIP Joined", chb.filter(x => x.joinedVIP).length),
     statBox("Content Items", chbContent.length),
-    statBox("Posted", chbContent.filter(x => x.status === "Posted").length),
   ].join("");
 
   const todos = state.todos;
@@ -298,6 +302,34 @@ function renderStats(){
     statBox("Done", todos.filter(x => x.done).length),
     statBox("Open", todos.filter(x => !x.done).length),
   ].join("");
+}
+
+function renderFlow(elId, arr, prefix){
+  const container = document.getElementById(elId);
+  container.innerHTML = FLOW_STAGES.map(stage => {
+    const items = arr.filter(x => x.stage === stage || (stage === "Ghosted" && (x.ghosted || x.stage === "Ghosted")));
+    return `
+      <div class="flow-col">
+        <h3>${stage}</h3>
+        <div class="flow-stack">
+          ${items.length ? items.map(item => `
+            <div class="flow-card">
+              <div class="inline">
+                <strong>${escapeHtml(item.name)}</strong>
+                <span class="badge">${escapeHtml(item.platform)}</span>
+              </div>
+              <div class="small muted">${item.followDate}</div>
+              <div class="inline" style="margin-top:8px">
+                <select onchange="moveStage('${prefix}', ${item.id}, this.value)">
+                  ${STAGES.map(s => `<option ${s===item.stage?"selected":""}>${s}</option>`).join("")}
+                </select>
+              </div>
+            </div>
+          `).join("") : `<div class="small muted">Nothing here.</div>`}
+        </div>
+      </div>
+    `;
+  }).join("");
 }
 
 function renderQuickCalendar(elId, arr){
@@ -360,7 +392,7 @@ function leadCard(item, type){
         ${item.joinedVIP ? '<span class="badge on">VIP</span>' : '<span class="badge">VIP</span>'}
         ${item.becameAffiliate ? '<span class="badge on">Affiliate</span>' : '<span class="badge">Affiliate</span>'}
         ${item.becameAmbassador ? '<span class="badge on">Ambassador</span>' : '<span class="badge">Ambassador</span>'}
-        ${item.ghosted ? '<span class="badge danger">Ghosted</span>' : '<span class="badge">Ghosted</span>'}
+        ${item.ghosted || item.stage === "Ghosted" ? '<span class="badge danger">Ghosted</span>' : '<span class="badge">Ghosted</span>'}
       </div>
       <div class="grid two">
         <input data-field="${prefix}-name-${item.id}" value="${escapeHtml(item.name)}" />
@@ -373,7 +405,7 @@ function leadCard(item, type){
         <label><input type="checkbox" data-field="${prefix}-vip-${item.id}" ${item.joinedVIP?"checked":""}/> Joined FB VIP</label>
         <label><input type="checkbox" data-field="${prefix}-aff-${item.id}" ${item.becameAffiliate?"checked":""}/> Affiliate</label>
         <label><input type="checkbox" data-field="${prefix}-amb-${item.id}" ${item.becameAmbassador?"checked":""}/> Ambassador</label>
-        <label><input type="checkbox" data-field="${prefix}-ghost-${item.id}" ${item.ghosted?"checked":""}/> Ghosted</label>
+        <label><input type="checkbox" data-field="${prefix}-ghost-${item.id}" ${(item.ghosted || item.stage === "Ghosted")?"checked":""}/> Ghosted</label>
       </div>
       <textarea data-field="${prefix}-notes-${item.id}" placeholder="Notes">${escapeHtml(item.notes || "")}</textarea>
       <div class="inline">
@@ -400,6 +432,15 @@ function escapeHtml(str){
     .replaceAll('"',"&quot;");
 }
 
+window.moveStage = function(prefix, idVal, stage){
+  const arr = prefix === "lwa" ? state.lwaLeads : state.chbLeads;
+  const item = arr.find(x => x.id === idVal);
+  if(!item) return;
+  item.stage = stage;
+  item.ghosted = stage === "Ghosted" ? true : item.ghosted;
+  persist(); render();
+}
+
 window.saveLeadCard = function(prefix, idVal){
   const arr = prefix === "lwa" ? state.lwaLeads : state.chbLeads;
   const item = arr.find(x => x.id === idVal);
@@ -413,6 +454,7 @@ window.saveLeadCard = function(prefix, idVal){
   item.becameAffiliate = document.querySelector(`[data-field="${prefix}-aff-${idVal}"]`).checked;
   item.becameAmbassador = document.querySelector(`[data-field="${prefix}-amb-${idVal}"]`).checked;
   item.ghosted = document.querySelector(`[data-field="${prefix}-ghost-${idVal}"]`).checked;
+  if(item.ghosted) item.stage = "Ghosted";
   item.notes = document.querySelector(`[data-field="${prefix}-notes-${idVal}"]`).value;
   persist(); render();
 }
@@ -484,12 +526,11 @@ function renderMonthCalendar(){
   const lastDay = new Date(state.calendarYear, state.calendarMonth + 1, 0);
   const startWeekday = firstDay.getDay();
   const daysInMonth = lastDay.getDate();
-
   const prevLastDay = new Date(state.calendarYear, state.calendarMonth, 0).getDate();
 
   const items = getAllCalendarItems();
-
   const totalCells = 42;
+
   for(let i = 0; i < totalCells; i++){
     let dayNumber = "";
     let cellDate = "";
@@ -582,6 +623,8 @@ function renderTodos(){
 
 function render(){
   renderStats();
+  renderFlow("lwaFlow", state.lwaLeads, "lwa");
+  renderFlow("chbFlow", state.chbLeads, "chb");
   renderQuickCalendar("lwaCalendar", filteredLeads(state.lwaLeads, state.lwaFilter));
   renderQuickCalendar("chbCalendar", filteredLeads(state.chbLeads, state.chbFilter));
   renderContent("lwaContentList", state.lwaContent, false);

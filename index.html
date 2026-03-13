@@ -38,7 +38,7 @@
         <div class="section-head">
           <div>
             <h2>LWA lead pipeline</h2>
-            <p class="muted">Track follow-ups, platform, VIP joins, affiliates, ambassadors, and content touches.</p>
+            <p class="muted">Track follow-ups, VIP joins, affiliate and ambassador movement, and ghosted leads.</p>
           </div>
           <div class="section-actions">
             <select id="lwaFilter">
@@ -49,10 +49,10 @@
               <option>48 Hours</option>
               <option>72 Hours</option>
               <option>30 Day</option>
+              <option>Ghosted</option>
               <option>Affiliate</option>
               <option>Ambassador</option>
               <option>VIP Joined</option>
-              <option>Ghosted</option>
             </select>
             <button id="toggleLwaLeadForm">Add Lead</button>
             <button class="secondary" id="toggleLwaContentForm">Add Content</button>
@@ -88,11 +88,16 @@
               <option>Posted</option>
             </select>
             <input id="lwaContentDate" type="date" />
-            <input id="lwaContentTouches" type="number" min="0" value="0" placeholder="Touches" />
+            <input id="lwaContentTouches" type="number" min="0" value="0" />
           </div>
           <textarea id="lwaContentNotes" placeholder="Hook, CTA, angle, caption reminder..."></textarea>
           <button id="saveLwaContent">Save LWA Content</button>
         </div>
+      </div>
+
+      <div class="card">
+        <h2>LWA follow-up flow</h2>
+        <div id="lwaFlow" class="flow-board"></div>
       </div>
 
       <div class="two-col">
@@ -119,7 +124,7 @@
         <div class="section-head">
           <div>
             <h2>Canine Haven pipeline</h2>
-            <p class="muted">Track dog business contacts, affiliate and ambassador movement, VIP joins, and content.</p>
+            <p class="muted">Track follow-up flow, affiliate and ambassador movement, VIP joins, and ghosted contacts.</p>
           </div>
           <div class="section-actions">
             <select id="chbFilter">
@@ -130,10 +135,10 @@
               <option>48 Hours</option>
               <option>72 Hours</option>
               <option>30 Day</option>
+              <option>Ghosted</option>
               <option>Affiliate</option>
               <option>Ambassador</option>
               <option>VIP Joined</option>
-              <option>Ghosted</option>
             </select>
             <button id="toggleChbLeadForm">Add Contact</button>
             <button class="secondary" id="toggleChbContentForm">Add Content</button>
@@ -169,11 +174,16 @@
               <option>Posted</option>
             </select>
             <input id="chbContentDate" type="date" />
-            <input id="chbContentTouches" type="number" min="0" value="0" placeholder="Touches" />
+            <input id="chbContentTouches" type="number" min="0" value="0" />
           </div>
           <textarea id="chbContentNotes" placeholder="Product angle, dog tip, CTA..."></textarea>
           <button id="saveChbContent">Save CHB Content</button>
         </div>
+      </div>
+
+      <div class="card">
+        <h2>Canine Haven follow-up flow</h2>
+        <div id="chbFlow" class="flow-board"></div>
       </div>
 
       <div class="two-col">

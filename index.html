@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LegacyBuilt Command Daytimer Plus</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <div class="eyebrow">LegacyBuilt Command Daytimer Plus</div>
+      <h1>Lead OS + Planner + Weekly Dashboard</h1>
+      <p class="subtitle">Working buttons, editable business branding, content tracking, follow-up flow, calendar, to-do list, and weekly scorecard dashboard.</p>
+    </div>
+    <div class="top-actions">
+      <button class="secondary" id="exportBtn">Export CSV</button>
+      <button id="installBtn" class="hidden">Install App</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="toolbar card">
+      <div class="segmented">
+        <button class="seg active" data-section="dashboard">Dashboard</button>
+        <button class="seg" data-section="lwa">LWA Lead OS</button>
+        <button class="seg" data-section="biz" id="bizTabBtn">Your Business</button>
+        <button class="seg" data-section="calendar">Calendar</button>
+        <button class="seg" data-section="todo">To Do List</button>
+        <button class="seg" data-section="settings">Brand Settings</button>
+      </div>
+      <input id="searchInput" placeholder="Search name, platform, notes, stage, content..." />
+    </section>
+
+    <section id="dashboardSection" class="section">
+      <div class="stats" id="dashboardStats"></div>
+
+      <div class="card">
+        <div class="section-head">
+          <div>
+            <h2>Weekly Dashboard</h2>
+            <p class="muted">Built from your spreadsheet example — daily tracker, affiliate health, ambassador pipeline, and reflection section.</p>
+          </div>
+          <div class="section-actions">
+            <input id="dashboardWeekLabel" placeholder="WEEK OF MARCH 31ST" />
+            <button id="saveDashboardWeek">Save Week Label</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 id="dashboardWeekHeading">Week of March 31st</h2>
+        <div class="table-wrap">
+          <table class="planner-table">
+            <thead>
+              <tr>
+                <th>Day</th>
+                <th>Content Post</th>
+                <th>New Aff Leads</th>
+                <th>New Convo's Started</th>
+                <th>Follow Ups</th>
+                <th>New Amb. Leads</th>
+                <th>Aff. Enrolled</th>
+                <th>Amb. Enrolled</th>
+              </tr>
+            </thead>
+            <tbody id="dailyTrackerBody"></tbody>
+            <tfoot>
+              <tr id="dailyTrackerTotalRow"></tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <h2>Affiliate Health</h2>
+          <div id="affiliateHealthList" class="stack compact-stack"></div>
+        </div>
+        <div class="card">
+          <h2>Ambassador Pipeline</h2>
+          <div id="ambassadorPipelineList" class="stack compact-stack"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Reflection Section</h2>
+        <div class="reflection-grid">
+          <label>Biggest Win This Week<textarea id="reflectionWin" placeholder="What went right this week?"></textarea></label>
+          <label>Biggest Leak / Problem<textarea id="reflectionLeak" placeholder="What slowed you down?"></textarea></label>
+          <label>Where I Need Support<textarea id="reflectionSupport" placeholder="What do you need help with?"></textarea></label>
+          <label>Next Strategic Move<textarea id="reflectionMove" placeholder="What is the next move?"></textarea></label>
+        </div>
+        <button id="saveReflections">Save Reflections</button>
+      </div>
+    </section>
+
+    <section id="lwaSection" class="section hidden">
+      <div class="stats" id="lwaStats"></div>
+      <div class="card">
+        <div class="section-head">
+          <div>
+            <h2>LWA lead pipeline</h2>
+            <p class="muted">Track follow-ups, VIP joins, affiliate and ambassador movement, ghosted leads, and content performance.</p>
+          </div>
+          <div class="section-actions">
+            <select id="lwaFilter">
+              <option>All</option><option>Due Today</option><option>Overdue</option><option>24 Hours</option><option>48 Hours</option><option>72 Hours</option><option>30 Day</option><option>Ghosted</option><option>Affiliate</option><option>Ambassador</option><option>VIP Joined</option>
+            </select>
+            <button id="toggleLwaLeadForm">Add Lead</button>
+            <button class="secondary" id="toggleLwaContentForm">Add Content</button>
+          </div>
+        </div>
+
+        <div id="lwaLeadForm" class="form hidden">
+          <div class="grid two">
+            <input id="lwaLeadName" placeholder="Lead name" />
+            <input id="lwaLeadPlatform" placeholder="Platform (Facebook, TikTok, Instagram...)" />
+            <select id="lwaLeadStage"></select>
+            <input id="lwaLeadFollowDate" type="date" />
+            <input id="lwaLeadScore" type="number" min="1" max="10" value="5" />
+          </div>
+          <textarea id="lwaLeadNotes" placeholder="Notes, objection, next move..."></textarea>
+          <div class="checks">
+            <label><input type="checkbox" id="lwaLeadVIP" /> Joined FB VIP</label>
+            <label><input type="checkbox" id="lwaLeadAffiliate" /> Became Affiliate</label>
+            <label><input type="checkbox" id="lwaLeadAmbassador" /> Became Ambassador</label>
+            <label><input type="checkbox" id="lwaLeadGhosted" /> Ghosted</label>
+          </div>
+          <button id="saveLwaLead">Save LWA Lead</button>
+        </div>
+
+        <div id="lwaContentForm" class="form hidden">
+          <div class="grid two">
+            <input id="lwaContentTitle" placeholder="Content title" />
+            <select id="lwaContentPillar"></select>
+            <select id="lwaContentStatus"><option value="Planned">Planned</option><option value="Drafted">Drafted</option><option value="Posted">Posted</option></select>
+            <input id="lwaContentDate" type="date" />
+            <input id="lwaContentTouches" type="number" min="0" value="0" placeholder="Touches" />
+            <input id="lwaContentComments" type="number" min="0" value="0" placeholder="Comments" />
+            <input id="lwaContentLeads" type="number" min="0" value="0" placeholder="Leads" />
+          </div>
+          <div class="platform-checks">
+            <span class="muted small">Platforms</span>
+            <label><input type="checkbox" id="lwaPlatformFacebook" /> Facebook</label>
+            <label><input type="checkbox" id="lwaPlatformTikTok" /> TikTok</label>
+            <label><input type="checkbox" id="lwaPlatformInstagram" /> Instagram</label>
+          </div>
+          <label class="inline-check"><input id="lwaContentDidWell" type="checkbox" /> Did it do well?</label>
+          <textarea id="lwaContentNotes" placeholder="Hook, CTA, angle, what happened, results..."></textarea>
+          <button id="saveLwaContent">Save LWA Content</button>
+        </div>
+      </div>
+
+      <div class="card"><h2>LWA follow-up flow</h2><div id="lwaFlow" class="flow-board"></div></div>
+      <div class="two-col">
+        <div class="card"><h2>LWA quick calendar</h2><div id="lwaCalendar"></div></div>
+        <div class="card"><h2>LWA content tracker</h2><div id="lwaContentList" class="stack"></div></div>
+      </div>
+      <div class="card"><h2>LWA lead cards</h2><div id="lwaLeadList" class="card-grid"></div></div>
+    </section>
+
+    <section id="bizSection" class="section hidden">
+      <div class="stats" id="bizStats"></div>
+      <div class="card">
+        <div class="section-head">
+          <div>
+            <h2 id="bizHeading">Your Business pipeline</h2>
+            <p class="muted">Track follow-up flow, affiliate and ambassador movement, VIP joins, ghosted contacts, and content performance.</p>
+          </div>
+          <div class="section-actions">
+            <select id="bizFilter">
+              <option>All</option><option>Due Today</option><option>Overdue</option><option>24 Hours</option><option>48 Hours</option><option>72 Hours</option><option>30 Day</option><option>Ghosted</option><option>Affiliate</option><option>Ambassador</option><option>VIP Joined</option>
+            </select>
+            <button id="toggleBizLeadForm">Add Contact</button>
+            <button class="secondary" id="toggleBizContentForm">Add Content</button>
+          </div>
+        </div>
+
+        <div id="bizLeadForm" class="form hidden">
+          <div class="grid two">
+            <input id="bizLeadName" placeholder="Name" />
+            <input id="bizLeadPlatform" placeholder="Platform" />
+            <select id="bizLeadStage"></select>
+            <input id="bizLeadFollowDate" type="date" />
+            <input id="bizLeadScore" type="number" min="1" max="10" value="5" />
+          </div>
+          <textarea id="bizLeadNotes" placeholder="Notes, interest, next move..."></textarea>
+          <div class="checks">
+            <label><input type="checkbox" id="bizLeadVIP" /> Joined FB VIP</label>
+            <label><input type="checkbox" id="bizLeadAffiliate" /> Became Affiliate</label>
+            <label><input type="checkbox" id="bizLeadAmbassador" /> Became Ambassador</label>
+            <label><input type="checkbox" id="bizLeadGhosted" /> Ghosted</label>
+          </div>
+          <button id="saveBizLead">Save Contact</button>
+        </div>
+
+        <div id="bizContentForm" class="form hidden">
+          <div class="grid two">
+            <input id="bizContentTitle" placeholder="Content title" />
+            <select id="bizContentPillar"></select>
+            <select id="bizContentStatus"><option value="Planned">Planned</option><option value="Drafted">Drafted</option><option value="Posted">Posted</option></select>
+            <input id="bizContentDate" type="date" />
+            <input id="bizContentTouches" type="number" min="0" value="0" placeholder="Touches" />
+            <input id="bizContentComments" type="number" min="0" value="0" placeholder="Comments" />
+            <input id="bizContentLeads" type="number" min="0" value="0" placeholder="Leads" />
+          </div>
+          <div class="platform-checks">
+            <span class="muted small">Platforms</span>
+            <label><input type="checkbox" id="bizPlatformFacebook" /> Facebook</label>
+            <label><input type="checkbox" id="bizPlatformTikTok" /> TikTok</label>
+            <label><input type="checkbox" id="bizPlatformInstagram" /> Instagram</label>
+          </div>
+          <label class="inline-check"><input id="bizContentDidWell" type="checkbox" /> Did it do well?</label>
+          <textarea id="bizContentNotes" placeholder="Angle, CTA, results..."></textarea>
+          <button id="saveBizContent">Save Content</button>
+        </div>
+      </div>
+
+      <div class="card"><h2 id="bizFlowHeading">Your Business follow-up flow</h2><div id="bizFlow" class="flow-board"></div></div>
+      <div class="two-col">
+        <div class="card"><h2 id="bizCalendarHeading">Your Business quick calendar</h2><div id="bizCalendar"></div></div>
+        <div class="card"><h2 id="bizContentHeading">Your Business content tracker</h2><div id="bizContentList" class="stack"></div></div>
+      </div>
+      <div class="card"><h2 id="bizContactsHeading">Your Business contact cards</h2><div id="bizLeadList" class="card-grid"></div></div>
+    </section>
+
+    <section id="calendarSection" class="section hidden">
+      <div class="card">
+        <div class="section-head">
+          <div><h2>Actual calendar</h2><p class="muted">Monthly view for both businesses together.</p></div>
+          <div class="section-actions"><button class="secondary" id="prevMonthBtn">Previous</button><div id="monthLabel" class="month-label"></div><button class="secondary" id="nextMonthBtn">Next</button></div>
+        </div>
+        <div class="calendar-grid-wrap">
+          <div class="calendar-weekdays"><div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div></div>
+          <div id="monthGrid" class="month-grid"></div>
+        </div>
+      </div>
+      <div class="card"><h2>Selected day follow-ups</h2><div id="selectedDayItems" class="stack"></div></div>
+    </section>
+
+    <section id="todoSection" class="section hidden">
+      <div class="stats" id="todoStats"></div>
+      <div class="card">
+        <div class="section-head"><div><h2>To do list</h2><p class="muted">Daily task list for follow-ups, content, and admin.</p></div></div>
+        <div class="form">
+          <div class="grid two">
+            <input id="todoTitle" placeholder="Task title" />
+            <select id="todoBusiness"></select>
+            <input id="todoDate" type="date" />
+            <select id="todoPriority"><option value="Low">Low</option><option value="Medium">Medium</option><option value="High">High</option></select>
+          </div>
+          <textarea id="todoNotes" placeholder="Task notes"></textarea>
+          <button id="saveTodo">Save Task</button>
+        </div>
+      </div>
+      <div class="card"><h2>Task list</h2><div id="todoList" class="stack"></div></div>
+    </section>
+
+    <section id="settingsSection" class="section hidden">
+      <div class="card">
+        <h2>Brand / Business Settings</h2>
+        <p class="muted">Set the name of the business you are building. It saves in the app.</p>
+        <div class="grid two">
+          <input id="brandBusinessName" placeholder="Example: My Boutique, My Coaching Brand, My Store" />
+          <input id="brandOwnerName" placeholder="Optional owner / founder name" />
+        </div>
+        <textarea id="brandTagline" placeholder="Optional short description or tagline"></textarea>
+        <button id="saveBrandSettings">Save Brand Settings</button>
+      </div>
+      <div class="card"><h2>Preview</h2><div id="brandPreview" class="item"></div></div>
+    </section>
+  </main>
+  <script src="js/app.js"></script>
+</body>
+</html>
